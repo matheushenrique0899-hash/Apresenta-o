@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso de Investimentos — Desperte Seu Dinheiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8A84B;
+    --gold2: #E2C06A;
+    --gold3: #F5E4A8;
+    --dark: #080809;
+    --dark2: #0F0F12;
+    --dark3: #16161C;
+    --dark4: #1E1E27;
+    --cream: #F2EDE3;
+    --cream2: #C9C3B5;
+    --cream3: #7A7568;
+    --green: #27C97A;
+    --red-orig: #E04444;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* COUNTDOWN BANNER */
+  .countdown-bar {
+    background: var(--gold);
+    color: var(--dark);
+    text-align: center;
+    padding: 10px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 100;
+  }
+
+  .countdown-bar strong { font-weight: 600; }
+
+  #timer { font-weight: 600; font-size: 14px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 36px;
+    left: 0; right: 0;
+    z-index: 99;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background: linear-gradient(180deg, rgba(8,8,9,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 10px 24px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    text-decoration: none;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Radial glow */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(ellipse, rgba(200,168,75,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Grid lines */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,168,75,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,168,75,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(200,168,75,0.35);
+    border-radius: 2px;
+    padding: 6px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.2s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 1.0;
+    color: var(--cream);
+    max-width: 900px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.4s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--cream2);
+    max-width: 640px;
+    line-height: 1.6;
+    margin: 24px auto 0;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.6s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-price-wrap {
+    margin: 44px 0 0;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.8s;
+    position: relative;
+    z-index: 2;
+  }
+
+  .price-from {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--cream3);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+
+  .price-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .price-main sup {
+    font-size: 28px;
+    vertical-align: super;
+    font-weight: 400;
+  }
+
+  .price-note {
+    font-size: 12px;
+    color: var(--cream3);
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  .discount-tag {
+    display: inline-block;
+    background: rgba(39,201,122,0.15);
+    border: 1px solid rgba(39,201,122,0.3);
+    color: var(--green);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .hero-btn {
+    display: inline-block;
+    margin-top: 32px;
+    background: var(--gold);
+    color: var(--dark);
+    padding: 18px 52px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.4s;
+  }
+
+  .hero-btn:hover::before { left: 100%; }
+
+  .hero-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(200,168,75,0.3);
+  }
+
+  .hero-guarantee {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--cream3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .hero-guarantee::before { content: '🔒'; font-size: 11px; }
+
+  /* TURMA STRIP */
+  .turma-strip {
+    background: var(--dark3);
+    border-top: 1px solid rgba(200,168,75,0.1);
+    border-bottom: 1px solid rgba(200,168,75,0.1);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+
+  .strip-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--cream2);
+  }
+
+  .strip-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  /* SECTION */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  .section-desc {
+    font-size: 16px;
+    color: var(--cream2);
+    line-height: 1.75;
+    max-width: 640px;
+    font-weight: 300;
+  }
+
+  /* AUTHORITY SECTION */
+  .authority {
+    background: var(--dark2);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .authority::before {
+    content: '';
+    position: absolute;
+    right: -100px; top: 50%;
+    transform: translateY(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, rgba(200,168,75,0.05) 0%, transparent 70%);
+  }
+
+  .authority-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .authority-card {
+    background: var(--dark3);
+    border: 1px solid rgba(200,168,75,0.12);
+    border-radius: 4px;
+    padding: 40px;
+    position: relative;
+  }
+
+  .authority-card::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    left: 30px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 100px;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 1;
+  }
+
+  .authority-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .authority-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .auth-badge {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--dark4);
+    border-radius: 3px;
+    border-left: 3px solid var(--gold);
+  }
+
+  .auth-badge-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .auth-badge-text h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 2px;
+  }
+
+  .auth-badge-text p {
+    font-size: 12px;
+    color: var(--cream3);
+  }
+
+  .award-badge {
+    border-left-color: var(--gold2);
+    background: linear-gradient(135deg, rgba(200,168,75,0.08), var(--dark4));
+  }
+
+  /* PROBLEMS */
+  .problems {
+    text-align: center;
+  }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .problem-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 4px;
+    padding: 28px;
+    text-align: left;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .problem-card:hover::after { transform: scaleX(1); }
+  .problem-card:hover { border-color: rgba(200,168,75,0.2); }
+
+  .problem-icon { font-size: 28px; margin-bottom: 14px; }
+
+  .problem-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .problem-card p {
+    font-size: 13px;
+    color: var(--cream3);
+    line-height: 1.65;
+  }
+
+  /* CURRICULUM */
+  .curriculum {
+    background: var(--dark2);
+    padding: 80px 0;
+  }
+
+  .curriculum-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .modules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 16px;
+    margin-top: 48px;
+  }
+
+  .module {
+    background: var(--dark3);
+    border: 1px solid rgba(200,168,75,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .module:hover { border-color: rgba(200,168,75,0.3); }
+
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(200,168,75,0.04);
+    border-bottom: 1px solid rgba(200,168,75,0.08);
+  }
+
+  .module-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    background: rgba(200,168,75,0.1);
+    border-radius: 2px;
+    padding: 4px 8px;
+    flex-shrink: 0;
+  }
+
+  .module-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .module-body {
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .module-item {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--cream2);
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .module-item::before {
+    content: '→';
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* OFFER */
+  .offer-section {
+    text-align: center;
+    padding: 100px 24px;
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  .offer-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(ellipse, rgba(200,168,75,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .offer-card {
+    max-width: 620px;
+    margin: 0 auto;
+    background: var(--dark3);
+    border: 1px solid rgba(200,168,75,0.25);
+    border-radius: 6px;
+    padding: 52px 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .offer-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(200,168,75,0.2), transparent 60%);
+    z-index: -1;
+  }
+
+  .turma-label {
+    display: inline-block;
+    background: rgba(200,168,75,0.12);
+    border: 1px solid rgba(200,168,75,0.3);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 2px;
+    letter-spacing: 3px;
+    margin-bottom: 28px;
+  }
+
+  .offer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .offer-title em { font-style: italic; color: var(--gold); }
+
+  .offer-desc {
+    font-size: 15px;
+    color: var(--cream2);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .price-block {
+    margin-bottom: 32px;
+    padding: 28px;
+    background: var(--dark4);
+    border-radius: 4px;
+  }
+
+  .original-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--cream3);
+    text-decoration: line-through;
+    margin-bottom: 4px;
+  }
+
+  .discount-pct {
+    display: inline-block;
+    background: rgba(39,201,122,0.15);
+    border: 1px solid rgba(39,201,122,0.25);
+    color: var(--green);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .final-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .final-price sup {
+    font-size: 30px;
+    font-weight: 400;
+    vertical-align: super;
+  }
+
+  .price-installment {
+    font-size: 13px;
+    color: var(--cream3);
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .bonuses {
+    text-align: left;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bonus-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--cream2);
+  }
+
+  .bonus-check {
+    width: 18px;
+    height: 18px;
+    background: rgba(39,201,122,0.15);
+    border: 1px solid rgba(39,201,122,0.3);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--green);
+    font-size: 11px;
+  }
+
+  .cta-main {
+    display: block;
+    width: 100%;
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 20px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.3px;
+  }
+
+  .cta-main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.4s;
+  }
+
+  .cta-main:hover::before { left: 100%; }
+
+  .cta-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(200,168,75,0.35);
+  }
+
+  .cta-sub {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--cream3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .cta-sub span { display: flex; align-items: center; gap: 4px; }
+
+  /* TESTIMONIALS AREA */
+  .social-proof {
+    background: var(--dark2);
+    padding: 80px 0;
+  }
+
+  .social-proof-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .proof-card {
+    background: var(--dark3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 4px;
+    padding: 28px;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+
+  .proof-card:hover { border-color: rgba(200,168,75,0.15); }
+
+  .stars {
+    color: var(--gold);
+    font-size: 14px;
+    margin-bottom: 14px;
+    letter-spacing: 2px;
+  }
+
+  .proof-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+
+  .proof-author {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--cream3);
+  }
+
+  .proof-author strong { color: var(--gold); }
+
+  /* FAQ */
+  .faq-section {
+    padding: 80px 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid rgba(200,168,75,0.1);
+    padding: 24px 0;
+  }
+
+  .faq-q {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--cream);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    user-select: none;
+  }
+
+  .faq-q::after {
+    content: '+';
+    font-size: 22px;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+    font-size: 14px;
+    color: var(--cream2);
+    line-height: 1.75;
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding-top: 16px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark2);
+    border-top: 1px solid rgba(200,168,75,0.08);
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .footer-text {
+    font-size: 12px;
+    color: var(--cream3);
+    line-height: 1.8;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto;
+    opacity: 0.5;
+  }
+
+  /* FORM */
+  .interest-form {
+    display: flex;
+    gap: 0;
+    max-width: 440px;
+    margin: 32px auto 0;
+  }
+
+  .interest-form input {
+    flex: 1;
+    background: var(--dark3);
+    border: 1px solid rgba(200,168,75,0.2);
+    border-right: none;
+    border-radius: 2px 0 0 2px;
+    padding: 14px 18px;
+    color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .interest-form input::placeholder { color: var(--cream3); }
+
+  .interest-form input:focus {
+    border-color: rgba(200,168,75,0.5);
+  }
+
+  .interest-form button {
+    background: var(--gold);
+    color: var(--dark);
+    border: none;
+    padding: 14px 24px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 0 2px 2px 0;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .interest-form button:hover { opacity: 0.85; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 12px 20px; top: 36px; }
+    .hero { padding: 100px 20px 60px; }
+    .authority-inner { grid-template-columns: 1fr; gap: 40px; }
+    .modules { grid-template-columns: 1fr; }
+    .offer-card { padding: 36px 24px; }
+    .final-price { font-size: 56px; }
+    .turma-strip { gap: 20px; }
+    .interest-form { flex-direction: column; }
+    .interest-form input { border-right: 1px solid rgba(200,168,75,0.2); border-radius: 2px; border-bottom: none; }
+    .interest-form button { border-radius: 2px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUNTDOWN BANNER -->
+<div class="countdown-bar">
+  ⚡ OFERTA DA 5ª TURMA — Encerra em <span id="timer">23:47:12</span> &nbsp;|&nbsp; <strong>Apenas 30 vagas disponíveis</strong>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Investir com Propósito</div>
+  <a href="#oferta" class="nav-cta">Garantir minha vaga →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    5ª Turma · Vagas Limitadas
+  </div>
+  <h1>Desperte o <em>investidor</em><br>que existe em você</h1>
+  <p class="hero-sub">Aprenda a fazer o seu dinheiro trabalhar por você — com a clareza de quem passou anos dentro dos maiores bancos do Brasil.</p>
+
+  <div class="hero-price-wrap">
+    <div class="discount-tag">✦ 34% DE DESCONTO · 5ª TURMA</div>
+    <div class="price-from">De R$ 297,00</div>
+    <div class="price-main"><sup>R$</sup>197</div>
+    <div class="price-note">pagamento único · acesso imediato</div>
+    <br>
+    <a href="#oferta" class="hero-btn">Quero aprender a investir agora →</a>
+    <div class="hero-guarantee">Garantia de 7 dias ou seu dinheiro de volta</div>
+  </div>
+</div>
+
+<!-- STRIP DE NÚMEROS -->
+<div class="turma-strip">
+  <div class="strip-item">
+    <div class="strip-num">5ª</div>
+    <div>Turma em<br>andamento</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-num">+7</div>
+    <div>Anos no<br>mercado</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-num">2</div>
+    <div>Grandes bancos<br>na trajetória</div>
+  </div>
+  <div class="strip-item">
+    <div class="strip-num">30</div>
+    <div>Vagas<br>disponíveis</div>
+  </div>
+</div>
+
+<!-- AUTORIDADE -->
+<div class="authority">
+  <div class="authority-inner">
+    <div>
+      <div class="section-label">Seu instrutor</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--gold); margin-bottom:8px;">Matheus Martins</div>
+      <h2 class="section-title">Experiência real,<br>dentro do <em>sistema</em></h2>
+      <p class="section-desc">Não sou um influenciador financeiro. Sou alguém que viveu o mercado por dentro — vi como os bancos pensam, quais produtos realmente valem a pena e o que eles preferem que você nunca descubra.</p>
+      <div class="divider" style="margin: 28px 0;"></div>
+      <div class="authority-badges">
+        <div class="auth-badge award-badge">
+          <div class="auth-badge-icon">🏆</div>
+          <div class="auth-badge-text">
+            <h4>Melhor Gerente PJ do Brasil — Santander 2023</h4>
+            <p>Reconhecido nacionalmente entre milhares de profissionais</p>
+          </div>
+        </div>
+        <div class="auth-badge">
+          <div class="auth-badge-icon">🏦</div>
+          <div class="auth-badge-text">
+            <h4>Experiência no Itaú e Santander</h4>
+            <p>Dois dos maiores bancos privados da América Latina</p>
+          </div>
+        </div>
+        <div class="auth-badge">
+          <div class="auth-badge-icon">📈</div>
+          <div class="auth-badge-text">
+            <h4>Investidor ativo desde 2017</h4>
+            <p>Mais de 7 anos operando renda variável na prática</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="authority-card reveal">
+      <p class="authority-quote">"Trabalhei anos dentro dos maiores bancos do Brasil. Vi de perto como o sistema funciona — e como a maioria das pessoas deixa dinheiro na mesa por falta de conhecimento. Criei esse curso para mudar isso."</p>
+      <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--cream3); letter-spacing:2px;">— MATHEUS MARTINS · EX-SANTANDER & ITAÚ</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEMAS / DOR -->
+<section class="problems reveal">
+  <div class="section-label">Você se identifica?</div>
+  <h2 class="section-title">Por que a maioria das pessoas<br>não <em>investe</em> — ou investe errado</h2>
+  <div class="problems-grid">
+    <div class="problem-card">
+      <div class="problem-icon">😟</div>
+      <h3>Deixa dinheiro parado na poupança</h3>
+      <p>A poupança rende menos que a inflação. Seu dinheiro está perdendo poder de compra todo mês sem você perceber.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">😰</div>
+      <h3>Acha que investir é coisa de rico</h3>
+      <p>Com R$ 30 por mês já é possível começar a investir de forma inteligente. O segredo é consistência, não valor.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">😵</div>
+      <h3>Não sabe em quem confiar</h3>
+      <p>O gerente do banco empurra o produto que dá mais comissão para ele — não o melhor para você. É assim que o sistema funciona.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">🤔</div>
+      <h3>Medo de perder dinheiro</h3>
+      <p>Sem entender as regras, qualquer investimento parece um cassino. O conhecimento transforma risco em estratégia calculada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CURRÍCULO -->
+<div class="curriculum">
+  <div class="curriculum-inner">
+    <div class="reveal">
+      <div class="section-label">O que você vai aprender</div>
+      <h2 class="section-title">4 módulos que vão <em>transformar</em><br>sua relação com o dinheiro</h2>
+    </div>
+    <div class="modules">
+      <div class="module reveal">
+        <div class="module-header">
+          <span class="module-num">MÓDULO 01</span>
+          <span class="module-title">O Sistema Financeiro por Dentro</span>
+        </div>
+        <div class="module-body">
+          <div class="module-item">Como o mercado financeiro realmente funciona</div>
+          <div class="module-item">Quem são os agentes e o que cada um quer de você</div>
+          <div class="module-item">SELIC, CDI, IPCA — entenda de uma vez por todas</div>
+          <div class="module-item">O que o banco NÃO te conta (vivência real)</div>
+        </div>
+      </div>
+      <div class="module reveal">
+        <div class="module-header">
+          <span class="module-num">MÓDULO 02</span>
+          <span class="module-title">Renda Fixa — Segurança que Rende</span>
+        </div>
+        <div class="module-body">
+          <div class="module-item">CDB, LCI, LCA, Tesouro Direto — regras e diferenças</div>
+          <div class="module-item">Como funciona o Imposto de Renda em cada produto</div>
+          <div class="module-item">Simulador de aposentadoria: quanto você teria investindo R$ 300/mês</div>
+          <div class="module-item">PGBL vs VGBL — qual escolher e quando</div>
+        </div>
+      </div>
+      <div class="module reveal">
+        <div class="module-header">
+          <span class="module-num">MÓDULO 03</span>
+          <span class="module-title">Renda Variável — O Dinheiro que Cresce</span>
+        </div>
+        <div class="module-body">
+          <div class="module-item">Ações, FIIs e ETFs para quem está começando</div>
+          <div class="module-item">Opções e contratos futuros: o que são e como funcionam</div>
+          <div class="module-item">Como analisar uma empresa antes de comprar</div>
+          <div class="module-item">IR em renda variável — evite surpresas na declaração</div>
+        </div>
+      </div>
+      <div class="module reveal">
+        <div class="module-header">
+          <span class="module-num">MÓDULO 04</span>
+          <span class="module-title">Psicologia e Estratégia de Carteira</span>
+        </div>
+        <div class="module-body">
+          <div class="module-item">Os 6 erros mentais que destroem patrimônio</div>
+          <div class="module-item">Como montar sua carteira do zero por perfil</div>
+          <div class="module-item">A Regra dos 4%: quanto você precisa para se aposentar</div>
+          <div class="module-item">Checklist do investidor consciente</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOIMENTOS -->
+<div class="social-proof">
+  <div class="social-proof-inner">
+    <div class="reveal">
+      <div class="section-label">Quem já passou por aqui</div>
+      <h2 class="section-title">Resultados de quem <em>decidiu</em> aprender</h2>
+    </div>
+    <div class="proof-grid">
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="proof-text">"Finalmente entendi o que é CDI e por que meu CDB rende mais que a poupança. Parece simples, mas ninguém nunca tinha me explicado assim."</p>
+        <div class="proof-author"><strong>Camila R.</strong> · Professora · Goiânia</div>
+      </div>
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="proof-text">"A parte de psicologia do investidor me abriu os olhos. Eu vendia na baixa com medo — agora entendo que isso é o erro clássico que o mercado quer que você cometa."</p>
+        <div class="proof-author"><strong>Lucas M.</strong> · Engenheiro · São Paulo</div>
+      </div>
+      <div class="proof-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="proof-text">"Comprei por curiosidade e fiquei impressionada com a profundidade. Quem já trabalhou dentro do banco fala diferente — dá pra sentir a experiência real."</p>
+        <div class="proof-author"><strong>Fernanda T.</strong> · Empreendedora · Cuiabá</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OFERTA PRINCIPAL -->
+<div class="offer-section" id="oferta">
+  <div class="offer-card reveal">
+    <div class="turma-label">✦ 5ª TURMA · OFERTA ESPECIAL</div>
+    <h2 class="offer-title">Tudo que você precisa<br>para começar a <em>investir</em></h2>
+    <p class="offer-desc">Acesso completo ao curso, materiais complementares e suporte para tirar dúvidas — por um preço que não vai se repetir.</p>
+
+    <div class="price-block">
+      <div class="original-price">De R$ 297,00</div>
+      <div class="discount-pct">▼ 34% DE DESCONTO</div>
+      <div class="final-price"><sup>R$</sup>197</div>
+      <div class="price-installment">pagamento via Pix · aprovação imediata</div>
+    </div>
+
+    <div class="bonuses">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--gold); margin-bottom:4px;">O QUE ESTÁ INCLUSO</div>
+      <div class="bonus-item"><div class="bonus-check">✓</div><strong style="color:var(--cream)">Este não é um ebook.</strong> Matheus Martins ministra o curso com você, de forma individual e online — aula ao vivo, no seu ritmo, com atenção exclusiva.</div>
+      <div class="bonus-item"><div class="bonus-check">✓</div>4 módulos completos</div>
+      <div class="bonus-item"><div class="bonus-check">✓</div>Acesso vitalício ao conteúdo e atualizações</div>
+      <div class="bonus-item"><div class="bonus-check">✓</div>Certificado de conclusão</div>
+      <div class="bonus-item"><div class="bonus-check">✓</div><strong style="color:var(--gold)">Bônus:</strong> Simulador de aposentadoria interativo</div>
+    </div>
+
+    <button class="cta-main" onclick="abrirModal()">
+      Garantir minha vaga agora — R$ 197 →
+    </button>
+
+    <div style="background:#1E1E27; border:1px solid rgba(200,168,75,0.2); border-radius:4px; padding:20px; margin-top:20px; text-align:left;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; color:#C8A84B; margin-bottom:10px;">📱 CHAVE PIX PARA PAGAMENTO</div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div id="chave-pix" style="font-family:'DM Mono',monospace; font-size:17px; color:#F2EDE3; letter-spacing:2px;">18998098771</div>
+        <button onclick="copiarPix()" style="background:rgba(200,168,75,0.12); border:1px solid rgba(200,168,75,0.3); color:#C8A84B; font-family:'Outfit',sans-serif; font-size:12px; font-weight:600; padding:8px 16px; border-radius:3px; cursor:pointer; transition:all 0.2s;" id="btn-copiar">📋 Copiar chave</button>
+      </div>
+      <div style="font-size:12px; color:#7A7568; margin-top:10px;">Após pagar, envie o comprovante no WhatsApp para liberar seu acesso imediatamente.</div>
+    </div>
+
+    <div class="cta-sub" style="margin-top:16px;">
+      <span>🔒 Pix seguro</span>
+      <span>↩ 7 dias de garantia</span>
+      <span>⚡ Acesso imediato</span>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div style="background: var(--dark2); padding: 20px 0;">
+<div class="faq-section reveal">
+  <div class="section-label" style="text-align:center; margin-bottom:32px;">Dúvidas frequentes</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Preciso ter experiência para fazer o curso?</div>
+    <div class="faq-a">Não. O curso foi desenhado para quem está começando do zero. Começamos do básico — o que é o mercado financeiro, quem são os agentes — e evoluímos progressivamente até renda variável e estratégias de carteira.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Por quanto tempo terei acesso ao conteúdo?</div>
+    <div class="faq-a">O acesso é vitalício. Uma vez comprado, o curso é seu para sempre, incluindo todas as atualizações futuras de conteúdo.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">O que é a garantia de 7 dias?</div>
+    <div class="faq-a">Se por qualquer motivo você não ficar satisfeito nos primeiros 7 dias após a compra, basta nos enviar uma mensagem e devolvemos 100% do seu dinheiro. Sem perguntas, sem burocracia.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Como funciona o pagamento?</div>
+    <div class="faq-a">O pagamento é feito exclusivamente via Pix. A chave está disponível na página. Após realizar o pagamento, envie o comprovante pelo WhatsApp e seu acesso será liberado imediatamente.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Por que o preço é especial na 5ª turma?</div>
+    <div class="faq-a">Cada turma tem um preço de lançamento para os primeiros alunos, que são os que nos ajudam com feedback e depoimentos. A partir da 6ª turma, o valor volta a R$ 297. Esta é sua última chance no preço de fundador.</div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Investir com Propósito</div>
+  <p class="footer-text">
+    Este curso tem finalidade educacional. Rentabilidades passadas não garantem retornos futuros. Consulte um profissional certificado antes de tomar decisões de investimento.<br><br>
+    © 2024 · Todos os direitos reservados
+  </p>
+</footer>
+
+<!-- MODAL -->
+<div id="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:9999; align-items:center; justify-content:center; padding:24px;">
+  <div style="background:#16161C; border:1px solid rgba(200,168,75,0.3); border-radius:6px; padding:44px 40px; max-width:420px; width:100%; position:relative; animation: fadeUp 0.35s ease;">
+    <button onclick="fecharModal()" style="position:absolute; top:16px; right:20px; background:none; border:none; color:#7A7568; font-size:22px; cursor:pointer; line-height:1;">×</button>
+
+    <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; color:#C8A84B; margin-bottom:16px;">QUASE LÁ!</div>
+    <h3 style="font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:#F2EDE3; margin-bottom:8px; line-height:1.2;">Como podemos<br>te chamar?</h3>
+    <p style="font-size:13px; color:#7A7568; margin-bottom:28px; line-height:1.6;">Vamos te receber no WhatsApp de forma personalizada. 👋</p>
+
+    <label style="display:block; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; color:#7A7568; margin-bottom:8px;">SEU NOME</label>
+    <input id="nome-input" type="text" placeholder="Ex: João Silva" autocomplete="name"
+      style="width:100%; background:#1E1E27; border:1px solid rgba(200,168,75,0.2); border-radius:3px; padding:14px 18px; color:#F2EDE3; font-family:'Outfit',sans-serif; font-size:15px; outline:none; margin-bottom:20px; transition:border-color 0.2s;"
+      onfocus="this.style.borderColor='rgba(200,168,75,0.6)'"
+      onblur="this.style.borderColor='rgba(200,168,75,0.2)'"
+      onkeydown="if(event.key==='Enter') enviarWhats()">
+
+    <button onclick="enviarWhats()" style="width:100%; background:#C8A84B; color:#080809; border:none; padding:16px; font-family:'Outfit',sans-serif; font-weight:600; font-size:16px; border-radius:3px; cursor:pointer; transition:opacity 0.2s; position:relative; overflow:hidden;">
+      Ir para o WhatsApp →
+    </button>
+    <p style="text-align:center; font-size:11px; color:#7A7568; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:6px;">🔒 Seus dados não serão compartilhados</p>
+  </div>
+</div>
+
+<script>
+  function copiarPix() {
+    navigator.clipboard.writeText('18998098771').then(() => {
+      const btn = document.getElementById('btn-copiar');
+      btn.textContent = '✅ Chave copiada!';
+      btn.style.background = 'rgba(39,201,122,0.15)';
+      btn.style.borderColor = 'rgba(39,201,122,0.3)';
+      btn.style.color = '#27C97A';
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar chave';
+        btn.style.background = 'rgba(200,168,75,0.12)';
+        btn.style.borderColor = 'rgba(200,168,75,0.3)';
+        btn.style.color = '#C8A84B';
+      }, 3000);
+    });
+  }
+
+  function abrirModal() {
+    const overlay = document.getElementById('modal-overlay');
+    overlay.style.display = 'flex';
+    setTimeout(() => document.getElementById('nome-input').focus(), 100);
+  }
+
+  function fecharModal() {
+    document.getElementById('modal-overlay').style.display = 'none';
+  }
+
+  function enviarWhats() {
+    const nome = document.getElementById('nome-input').value.trim();
+    const saudacao = nome ? `Olá! Meu nome é ${nome} e` : 'Olá!';
+    const msg = encodeURIComponent(`${saudacao} quero garantir minha vaga na 5ª turma do Curso de Investimentos por R$ 197. 🚀`);
+    window.open(`https://wa.me/5518998098771?text=${msg}`, '_blank');
+    fecharModal();
+  }
+
+  // Fechar modal clicando fora
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) fecharModal();
+  });
+
+  // COUNTDOWN
+  function updateTimer() {
+    const end = localStorage.getItem('cdown_end');
+    let endTime;
+    if (!end) {
+      endTime = Date.now() + (23 * 3600 + 47 * 60 + 12) * 1000;
+      localStorage.setItem('cdown_end', endTime);
+    } else {
+      endTime = parseInt(end);
+    }
+    function tick() {
+      const diff = Math.max(0, endTime - Date.now());
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const fmt = n => String(n).padStart(2, '0');
+      document.getElementById('timer').textContent = `${fmt(h)}:${fmt(m)}:${fmt(s)}`;
+      if (diff > 0) setTimeout(tick, 1000);
+    }
+    tick();
+  }
+  updateTimer();
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // FAQ
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
